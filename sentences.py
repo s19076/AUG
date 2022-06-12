@@ -9,11 +9,15 @@ import utils as ut
 
 tokens = (
     "SENTENCE",
+    "CONCAT",
+    "REVERSE",
 )
 
 # Tokens
 
 t_SENTENCE = r'[a-zA-Z0-9]+(\s+[a-zA-Z0-9]*)*'
+t_CONCAT = r'\+'
+t_REVERSE = r'\^-1'
 
 # Ignored characters
 t_ignore = " \t"
@@ -39,6 +43,14 @@ def p_expression_sentence(t):
     '''expression : SENTENCE'''
     t[0] = t[1]
 
+def p_expression_expression_concat_expression(t):
+    '''expression : expression CONCAT expression'''
+    t[0] = t[1] + t[3]
+
+def p_expression_reverse(t):
+    '''expression : expression REVERSE'''
+    t[0] = ut.reverse_sentence(t[1])
+
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
 
@@ -49,8 +61,9 @@ while True:
     #     s = input('calc > ')
     # except EOFError:
     #     break
-    parser.parse("ala")
-    # parser.parse("ala + am^-1 + kota+bota", debug = True)
+    parser.parse("ala ma kota asdasd")
+    parser.parse("ala+ma+kota+kot ma ale+asdasd")
+    parser.parse("testa am^-1 + kota+bota")
     # parser.parse("asdasd kamil nenta asdasd")
     # parser.parse("ala ma kota[0]", debug=True)
 
