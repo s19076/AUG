@@ -71,14 +71,10 @@ def p_length_expression(t):
 def p_expression_expression_first_LAST(t):
     '''expression : expression FIRST
                   | expression LAST'''
-    a = t[1]
-    b = t[2]
     if t[2] == "[0]":
         t[0] = t[1].split()[0]
     elif t[2] == "[-1]":
         t[0] = t[1].split()[-1]
-    c = t[0]
-    pass
 
 def p_error(t):
 
