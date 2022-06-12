@@ -13,7 +13,9 @@ tokens = (
     "REVERSE",
     "LENGTH",
     "FIRST",
-    "LAST"
+    "LAST",
+    "REMOVEFIRST",
+    "REMOVELAST",
 )
 
 # Tokens
@@ -24,6 +26,8 @@ t_REVERSE = r'\^-1'
 t_LENGTH = r'\#'
 t_FIRST = r'\[0\]'
 t_LAST = r'\[-1\]'
+t_REMOVEFIRST = r'\[1:\]'
+t_REMOVELAST = r'\[:-1\]'
 
 # Ignored characters
 t_ignore = " \t"
@@ -42,6 +46,7 @@ lexer = lex.lex()
 # Parsing rules
 precedence = (
     ('left', 'LENGTH'),
+    ('left', 'REMOVEFIRST', 'REMOVELAST'),
     ('left', 'CONCAT'),
     ('left', 'FIRST', 'LAST'),
     ('left', 'REVERSE'),
@@ -68,13 +73,21 @@ def p_length_expression(t):
     '''length : expression LENGTH'''
     t[0] = len(t[1])
 
-def p_expression_expression_first_LAST(t):
+def p_expression_expression_first_last(t):
     '''expression : expression FIRST
                   | expression LAST'''
     if t[2] == "[0]":
         t[0] = t[1].split()[0]
     elif t[2] == "[-1]":
         t[0] = t[1].split()[-1]
+
+def p_expression_expression_remove_first_last(t):
+    '''expression : expression REMOVEFIRST
+                  | expression REMOVELAST'''
+    if t[2] == "[1:]":
+        t[0] = ' '.join(t[1].split()[1:])
+    elif t[2] == "[:-1]":
+        t[0] = ' '.join(t[1].split()[:-1])
 
 def p_error(t):
 
@@ -92,5 +105,7 @@ while True:
     parser.parse("testa am^-1 + kota+bota")
     parser.parse("kamil^-1+kamil^-1 + kot#")
     parser.parse("alan^-1+ ma kota[-1]#")
+    parser.parse("alan[-1]")
+    parser.parse("alan ma^-1 +kota[1:]")
 
     break
