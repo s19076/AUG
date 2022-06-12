@@ -36,7 +36,7 @@ def p_statement_expr(t):
     print(t[1])
 
 def p_expression_sentence(t):
-    '''expression : sentence'''
+    '''expression : SENTENCE'''
     t[0] = t[1]
 
 def p_error(t):
@@ -49,9 +49,9 @@ while True:
     #     s = input('calc > ')
     # except EOFError:
     #     break
-    parser.parse("ala + ma + kota")
-    parser.parse("ala + am^-1 + kota+bota", debug = True)
-    parser.parse("asdasd kamil nenta asdasd")
-    parser.parse("ala ma kota[0]", debug=True)
+    parser.parse("ala")
+    # parser.parse("ala + am^-1 + kota+bota", debug = True)
+    # parser.parse("asdasd kamil nenta asdasd")
+    # parser.parse("ala ma kota[0]", debug=True)
 
     break
