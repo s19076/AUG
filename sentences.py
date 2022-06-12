@@ -11,6 +11,7 @@ tokens = (
     "SENTENCE",
     "CONCAT",
     "REVERSE",
+    "LENGTH",
 )
 
 # Tokens
@@ -18,6 +19,7 @@ tokens = (
 t_SENTENCE = r'[a-zA-Z0-9]+(\s+[a-zA-Z0-9]*)*'
 t_CONCAT = r'\+'
 t_REVERSE = r'\^-1'
+t_LENGTH = r'\#'
 
 # Ignored characters
 t_ignore = " \t"
@@ -36,7 +38,8 @@ lexer = lex.lex()
 # Parsing rules
 
 def p_statement_expr(t):
-    '''statement : expression'''
+    '''statement : expression
+                 | length'''
     print(t[1])
 
 def p_expression_sentence(t):
@@ -51,6 +54,10 @@ def p_expression_reverse(t):
     '''expression : expression REVERSE'''
     t[0] = ut.reverse_sentence(t[1])
 
+def p_length_expression(t):
+    '''length : expression LENGTH'''
+    t[0] = len(t[1])
+
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
 
@@ -64,7 +71,7 @@ while True:
     parser.parse("ala ma kota asdasd")
     parser.parse("ala+ma+kota+kot ma ale+asdasd")
     parser.parse("testa am^-1 + kota+bota")
-    # parser.parse("asdasd kamil nenta asdasd")
+    parser.parse("kamil kamil^-1 + kot#")
     # parser.parse("ala ma kota[0]", debug=True)
 
     break
